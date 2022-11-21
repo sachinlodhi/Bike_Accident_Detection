@@ -16,7 +16,7 @@ def get_data(xmlstr):
     accel2 = soup.find('accelerometer2') # headwise
     # print(accel2.string)
     accel3 = soup.find('accelerometer3') # for flat phone
-    # print(accel3.string)
+    print(accel3.string)
     # print("\n")
     # print( lat.string, long.string, accel1.string)
     return [lat.string, long.string, accel3.string]

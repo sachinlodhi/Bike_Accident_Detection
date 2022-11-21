@@ -12,17 +12,15 @@ IP = "0.0.0.0"
 sock = socket(AF_INET, SOCK_DGRAM) # SOCK_DGRAM means UDP socket
 sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
 sock.bind((IP, PORT))
-
 # Data to send msgs
-msg_details = ['+19706505827', '+919340164878'] # ['free number from twillio', 'To contact number(s)']
-
+msg_details = ['+19876543210', '+919999999999'] # ['free number from twillio', 'To contact number(s)']
 
 # things for beeping
 frequency = 2500  # Set Frequency To 2500 Hertz
 duration = 1  # Set Duration To 1 = 1 seconds
 
 
-
+# function to produce beep
 def beep(stop):
     while True:
         # For windows
@@ -34,12 +32,12 @@ def beep(stop):
 
 time_down = 0 # check how long vehicle is not in correct position
 exit_flag = False # variable to check vehicle position and stopping beep and starting it
-old_axis = 2
+old_axis = 8
 sms_flag = True # to send sms only once
 while True:
     data, addr = sock.recvfrom(1024) # blocking of data
     values = Extractor.get_data(data)
-    if old_axis < 2 and float(values[2]) < 2:
+    if old_axis < 8 and float(values[2]) < 8:
         # print("STILL DOWN")
         time_down += 1  # if car keeps down increase the timer to check
         if time_down > 5 and sms_flag:
@@ -49,15 +47,13 @@ while True:
             print(f'Access the location at : https://www.google.com/search?q={values[0]}+%2C+{values[1]}')
             sms_flag = False
         continue
-    if old_axis > 2 and float(values[2]) > 2:
-
+    if old_axis > 8 and float(values[2]) > 8:
         time_down = 0  # if car gets back up it resets to 0
         print("BACKS UP")
         continue
-
     # Updating previous status if the position changes
     old_axis = float(values[2]) # -> previous state of the vehicle position
-    if old_axis < 2:
+    if old_axis < 8:
         print("DOWN")
         exit_flag = False
         t = threading.Thread(target=beep, args=(lambda: exit_flag,))
