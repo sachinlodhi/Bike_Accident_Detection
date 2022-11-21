@@ -34,8 +34,9 @@ old_axis = 2
 sms_flag = True # to send sms only once
 while True:
     data, addr = sock.recvfrom(1024) # blocking of data
+
     values = Extractor.get_data(data)
-    print(values[2])
+
     if old_axis < 2 and float(values[2]) < 2:
         # print("STILL DOWN")
         time_down += 1  # if car keeps down increase the timer to check
@@ -56,10 +57,6 @@ while True:
     old_axis = float(values[2]) # -> previous state of the vehicle position
     if old_axis < 2:
         print("DOWN")
-
-
-
-
         exit_flag = False
         t = threading.Thread(target=beep, args=(lambda: exit_flag,))
         t.start() # start beeping
